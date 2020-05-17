@@ -1,0 +1,8 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =6
+let g:netrw_dirhist_1='/home/zcz/github/buildroot-es_udk/tiny4412-eabihf-buildroot-es_udk/package/arm-linux-bsp-tests'
+let g:netrw_dirhist_2='/home/zcz/.conda'
+let g:netrw_dirhist_3='/home/clarencez/.bazel'
+let g:netrw_dirhist_4='/home/clarencez/.bazel/bin'
+let g:netrw_dirhist_5='/etc/docker'
+let g:netrw_dirhist_6='/home/clarencez/.docker'
