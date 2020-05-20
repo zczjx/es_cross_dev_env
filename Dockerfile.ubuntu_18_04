@@ -34,6 +34,7 @@ RUN apt-get update \
     nfs-common \
     portmap \
     vim \
+    file cpio python rsync bc \
     ctags \
     inetutils-ping \
     git
@@ -53,14 +54,16 @@ RUN groupadd -r -f -g ${gid} ${username} \
     && echo 'root:123456' | chpasswd \
     && echo ${username}:123456 | chpasswd \
     && usermod -aG sudo ${username} \
-    && mkdir -p /workspace && chown ${username} /workspace \
-    && mkdir -p /home/${username}/.vim \
-    && mkdir -p /home/${username}/3rd-pkg
+    && mkdir -p /workspace && chown ${username} /workspace
 
 WORKDIR /workspace
 USER ${username}
+RUN mkdir -p /home/${username}/.vim \
+    && mkdir -p /home/${username}/3rd-pkg \
+    && mkdir -p /home/${username}/toolchain
 COPY config/.bashrc /home/${username}
 COPY config/.gitconfig /home/${username}
 COPY config/.vimrc /home/${username}
 COPY config/.vim/* /home/${username}/.vim/
+COPY toolchain/* /home/${username}/toolchain/
 CMD /bin/bash
