@@ -2,6 +2,8 @@ FROM ubuntu:18.04
 ARG uid=1000
 ARG gid=1000
 ARG username=git
+ARG arch=arm
+ARG toolchain=gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf.tar
 COPY config/sources.list.18.04 /etc/apt/sources.list
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -65,5 +67,5 @@ COPY config/.bashrc /home/${username}
 COPY config/.gitconfig /home/${username}
 COPY config/.vimrc /home/${username}
 COPY config/.vim/* /home/${username}/.vim/
-COPY toolchain/* /home/${username}/toolchain/
+COPY toolchain/${toolchain} /home/${username}/toolchain/
 CMD /bin/bash
