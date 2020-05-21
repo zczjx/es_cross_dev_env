@@ -41,6 +41,7 @@ RUN apt-get update \
     file cpio python rsync bc \
     ctags \
     inetutils-ping \
+    tree \
     git
 
 RUN groupadd -r -f -g ${gid} ${username} \
