@@ -2,6 +2,10 @@ FROM ubuntu:20.04
 ARG uid=1000
 ARG gid=1000
 ARG username=git
+ARG arch=arm
+ARG toolchain=gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf.tar
+ARG toolchain_dir=gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf
+ARG cmake_version=3.17.2
 COPY config/sources.list.20.04 /etc/apt/sources.list
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -12,6 +16,7 @@ RUN apt-get update \
     libcurl4-openssl-dev \
     wget \
     libncurses5-dev \
+    ncurses-dev \
     autoconf \
     automake \
     zlib1g-dev \
@@ -29,23 +34,41 @@ RUN apt-get update \
     gettext \
     texinfo \
     gawk \
+    nfs-kernel-server \
+    nfs-common \
+    portmap \
+    vim \
+    file cpio python rsync bc \
+    ctags \
+    inetutils-ping \
     git
-
-# Install Cmake
-# RUN cd /tmp && \
-#    wget https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4-Linux-x86_64.sh && \
-#    chmod +x cmake-3.14.4-Linux-x86_64.sh && \
-#    ./cmake-3.14.4-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir --skip-license && \
-#    rm ./cmake-3.14.4-Linux-x86_64.sh
-
 
 RUN groupadd -r -f -g ${gid} ${username} \
     && useradd -u ${uid} -g ${gid} -G sudo -m ${username} \
     && echo 'root:123456' | chpasswd \
     && echo ${username}:123456 | chpasswd \
     && usermod -aG sudo ${username} \
-    && mkdir -p /workspace && chown ${username} /workspace
+    && mkdir -p /workspace && chown ${username} /workspace \
+    # Install Cmake
+    && cd /tmp \
+    && wget https://github.com/Kitware/CMake/releases/download/v${cmake_version}/cmake-${cmake_version}-Linux-x86_64.sh \
+    && chmod +x cmake-${cmake_version}-Linux-x86_64.sh \
+    && ./cmake-${cmake_version}-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir --skip-license \
+    && rm ./cmake-${cmake_version}-Linux-x86_64.sh
 
-WORKDIR /workspace
+WORKDIR /home/${username}
 USER ${username}
+COPY --chown=${username}:${username} config/.bashrc /home/${username}
+COPY --chown=${username}:${username} toolchain/${toolchain} /home/${username}
+RUN mkdir -p /home/${username}/.vim \
+    && mkdir -p /home/${username}/3rd-pkg \
+    && mkdir -p /home/${username}/toolchain \
+    && tar -xf ${toolchain} \
+    && echo export PATH=$PATH:/home/${username}/${toolchain_dir}/bin >> /home/${username}/.bashrc
+COPY --chown=${username}:${username} config/.gitconfig /home/${username}
+COPY --chown=${username}:${username} config/.vimrc /home/${username}
+COPY --chown=${username}:${username} config/.vim/* /home/${username}/.vim/
+COPY config/exports /etc
+EXPOSE 111/udp 2049/tcp 4046/udp
+WORKDIR /workspace
 CMD /bin/bash
