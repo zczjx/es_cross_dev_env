@@ -3,7 +3,7 @@ ARG uid=1000
 ARG gid=1000
 ARG username=git
 ARG arch=arm
-ARG toolchain=gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf.tar
+ARG toolchain=gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf
 ARG toolchain_dir=gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf
 ARG cmake_version=3.17.2
 COPY config/sources.list.18.04 /etc/apt/sources.list
@@ -60,11 +60,11 @@ RUN groupadd -r -f -g ${gid} ${username} \
 WORKDIR /home/${username}
 USER ${username}
 COPY --chown=${username}:${username} config/.bashrc /home/${username}
-COPY --chown=${username}:${username} toolchain/${toolchain} /home/${username}
+COPY --chown=${username}:${username} toolchain/${toolchain}* /home/${username}
 RUN mkdir -p /home/${username}/.vim \
     && mkdir -p /home/${username}/3rd-pkg \
     && mkdir -p /home/${username}/toolchain \
-    && tar -xf ${toolchain} \
+    && tar -xf ${toolchain}* \
     && echo export PATH=$PATH:/home/${username}/${toolchain_dir}/bin >> /home/${username}/.bashrc
 COPY --chown=${username}:${username} config/.gitconfig /home/${username}
 COPY --chown=${username}:${username} config/.vimrc /home/${username}
