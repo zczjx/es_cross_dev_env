@@ -1,2 +1,2 @@
-# es_cross_dev_env
-embedded syatem Ubuntu cross build env with Docker
+# es cross dev env
+embedded system Ubuntu cross build env with Docker
