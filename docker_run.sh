@@ -2,8 +2,8 @@
 
 if [ $# -lt 3 ]; then
 echo "usage: ./docker_run.sh [arm | armv8l | aarch64] \
-[workspace path exam: /home/$USER/workspace] \
-[3rd-pkg path exam: /home/$USER/3rd-pkg]"
+[workspace path exam: /home/$USER/github/es_cross_dev_env/workspace] \
+[3rd-pkg path exam: /home/$USER/github/es_cross_dev_env/3rd-pkg]"
 exit 1
 fi
 arch=$1
